@@ -39,6 +39,9 @@ function updatePrice () {
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
 app.on('ready', function () {
+  // hide dock icon (OSX only)
+  app.dock && app.dock.hide && app.dock.hide()
+  
   tray = new Tray(__dirname + '/IconTemplate.png')
   var contextMenu = Menu.buildFromTemplate([
     {
