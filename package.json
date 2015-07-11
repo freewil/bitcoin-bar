@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-bar",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Display bitcoin price in your desktop menubar",
   "main": "index.js",
   "scripts": {
