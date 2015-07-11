@@ -1,0 +1,19 @@
+{
+  "name": "bitcoin-bar",
+  "version": "0.0.0",
+  "description": "Display bitcoin price in your desktop menubar",
+  "main": "index.js",
+  "scripts": {
+    "format": "standard --format",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sean Lavine <lavis88@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "coinbase-exchange": "^0.2.0"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^0.29.2",
+    "standard": "^4.5.3"
+  }
+}
