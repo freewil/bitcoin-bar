@@ -14,6 +14,25 @@ var tray = null
 
 function setState (isActive) {
   tray.setImage(__dirname + (isActive ? '/IconTemplate.png' : '/IconTemplate-inactive.png'))
+  tray.setContextMenu(getMenu(isActive))
+}
+
+function getMenu (isActive) {
+  return Menu.buildFromTemplate([
+    {
+      label: isActive ? 'Online' : 'Offline',
+      enabled: false
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Quit',
+      click: function () {
+        app.quit()
+      }
+    }
+  ])
 }
 
 function updatePrice () {
@@ -55,14 +74,6 @@ app.on('ready', function () {
   app.dock && app.dock.hide && app.dock.hide()
 
   tray = new Tray(__dirname + '/IconTemplate-inactive.png')
-  var contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Quit',
-      click: function () {
-        app.quit()
-      }
-    }
-  ])
-  tray.setContextMenu(contextMenu)
+  tray.setContextMenu(getMenu(false))
   updatePrice()
 })
