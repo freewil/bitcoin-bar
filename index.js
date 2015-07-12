@@ -9,29 +9,41 @@ var CoinbaseExchange = require('coinbase-exchange')
 var publicClient = new CoinbaseExchange.PublicClient()
 
 var TIMEOUT_MS = 60 * 1000
-var firstUpdate = true
+var prevTitle = ''
 var tray = null
+
+function setState (isActive) {
+  tray.setImage(__dirname + (isActive ? '/IconTemplate.png' : '/IconTemplate-inactive.png'))
+}
 
 function updatePrice () {
   publicClient.getProductTicker(function (err, ticker) {
+    var title = ''
+
     if (err) {
-      // TODO eventually do something when this fails
+      // do nothing, keep empty title
     } else {
-      // TODO catch error from JSON.parse()
-      var json = JSON.parse(ticker.body)
-      var price = parseFloat(json.price).toFixed(2)
-      tray.setTitle('$' + price)
+      try {
+        var json = JSON.parse(ticker.body)
+        title = '$' + parseFloat(json.price).toFixed(2)
+      } catch (e) {
+        // do nothing, keep empty title
+      }
     }
 
-    if (firstUpdate) {
-      // immediately set price again on first update to ensure tray width is
-      // set properly - this is probably a glitch in electron's tray module
-      firstUpdate = false
+    // set title after getting update
+    tray.setTitle(title)
+    setState(title.length ? true : false)
+
+    if (title.length != prevTitle.length) {
+      // immediately set title again if title length changes to ensure tray
+      // width is set properly - this is probably a glitch in electron's tray module
       process.nextTick(function () {
-        tray.setTitle('$' + price)
+        tray.setTitle(title)
       })
     }
 
+    prevTitle = title
     setTimeout(updatePrice, TIMEOUT_MS)
   })
 }
@@ -41,8 +53,8 @@ function updatePrice () {
 app.on('ready', function () {
   // hide dock icon (OSX only)
   app.dock && app.dock.hide && app.dock.hide()
-  
-  tray = new Tray(__dirname + '/IconTemplate.png')
+
+  tray = new Tray(__dirname + '/IconTemplate-inactive.png')
   var contextMenu = Menu.buildFromTemplate([
     {
       label: 'Quit',
