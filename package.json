@@ -1,11 +1,11 @@
 {
   "name": "bitcoin-bar",
   "version": "0.0.1",
-  "description": "Display bitcoin price in your desktop menubar",
+  "description": "Display live bitcoin price in your desktop's menubar (tray)",
   "main": "index.js",
   "scripts": {
     "format": "standard --format",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard"
   },
   "author": "Sean Lavine <lavis88@gmail.com>",
   "license": "ISC",
