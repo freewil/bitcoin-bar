@@ -1,6 +1,7 @@
 var app = require('app')
 var Menu = require('menu')
 var Tray = require('tray')
+var async = require('async')
 
 var CoinbaseExchange = require('coinbase-exchange')
 
@@ -12,17 +13,29 @@ var TIMEOUT_MS = 60 * 1000
 var prevTitle = ''
 var tray = null
 
-function setState (isActive) {
+function setState (isActive, open, price) {
   tray.setImage(__dirname + (isActive ? '/IconTemplate.png' : '/IconTemplate-inactive.png'))
-  tray.setContextMenu(getMenu(isActive))
+  tray.setContextMenu(getMenu(isActive, open, price))
 }
 
-function getMenu (isActive) {
-  return Menu.buildFromTemplate([
+function getMenu (isActive, open, price) {
+  var items = [
     {
       label: isActive ? 'Online' : 'Offline',
       enabled: false
-    },
+    }
+  ]
+
+  if (isActive) {
+    var diff = (price - open).toFixed(2)
+    diff = (diff > 0) ? '+$' + diff : '-$' + diff
+    items.push({
+      label: '24 Hour Price: ' + diff,
+      enabled: false
+    })
+  }
+
+  items.push(
     {
       type: 'separator'
     },
@@ -32,26 +45,46 @@ function getMenu (isActive) {
         app.quit()
       }
     }
-  ])
+  )
+
+  return Menu.buildFromTemplate(items)
 }
 
 function updatePrice () {
-  publicClient.getProductTicker(function (err, res, ticker) {
-    var title = ''
+  async.parallel({
+    stats: function (cb) {
+      publicClient.getProduct24HrStats(function (err, res, stats) {
+        if (err) return cb(err)
+        cb(null, stats)
+      })
+    },
 
+    ticker: function (cb) {
+      publicClient.getProductTicker(function (err, res, ticker) {
+        if (err) return cb(err)
+        cb(null, ticker)
+      })
+    }
+
+  }, function (err, results) {
+    var title = ''
+    var open = 0
+    var price = 0
     if (err) {
       // do nothing, keep empty title
     } else {
-      title = '$' + parseFloat(ticker.price).toFixed(2)
+      open = parseFloat(results.stats.open).toFixed(2)
+      price = parseFloat(results.ticker.price).toFixed(2)
+      title = '$' + price
     }
 
     // set title after getting update
     tray.setTitle(title)
-    setState(title.length ? true : false)
+    setState(title.length, open, price)
 
-    if (title.length != prevTitle.length) {
-      // immediately set title again if title length changes to ensure tray
-      // width is set properly - this is probably a glitch in electron's tray module
+    // immediately set title again if title length changes to ensure tray
+    // width is set properly - this is probably a glitch in electron's tray module
+    if (title.length !== prevTitle.length) {
       process.nextTick(function () {
         tray.setTitle(title)
       })
