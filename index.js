@@ -36,18 +36,13 @@ function getMenu (isActive) {
 }
 
 function updatePrice () {
-  publicClient.getProductTicker(function (err, ticker) {
+  publicClient.getProductTicker(function (err, res, ticker) {
     var title = ''
 
     if (err) {
       // do nothing, keep empty title
     } else {
-      try {
-        var json = JSON.parse(ticker.body)
-        title = '$' + parseFloat(json.price).toFixed(2)
-      } catch (e) {
-        // do nothing, keep empty title
-      }
+      title = '$' + parseFloat(ticker.price).toFixed(2)
     }
 
     // set title after getting update
