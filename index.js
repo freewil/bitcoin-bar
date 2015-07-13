@@ -28,7 +28,7 @@ function getMenu (isActive, open, price) {
 
   if (isActive) {
     var diff = (price - open).toFixed(2)
-    diff = (diff > 0) ? '+$' + diff : '-$' + diff
+    diff = (diff >= 0) ? '+$' + diff : '-$' + diff
     items.push({
       label: '24 Hour Price: ' + diff,
       enabled: false
