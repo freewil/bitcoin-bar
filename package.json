@@ -16,5 +16,13 @@
   "devDependencies": {
     "electron-prebuilt": "^0.29.2",
     "standard": "^4.5.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freewil/bitcoin-bar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/freewil/bitcoin-bar/issues"
+  },
+  "homepage": "https://github.com/freewil/bitcoin-bar#readme"
 }
