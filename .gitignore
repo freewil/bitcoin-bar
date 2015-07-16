@@ -27,4 +27,7 @@ build/Release
 node_modules
 
 # directory for electron-packager output
+/package
+
+# directory for electron-builder output
 /release
