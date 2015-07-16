@@ -1,8 +1,8 @@
 {
   "osx" : {
     "title": "BitcoinBar",
-    "background": "bg.jpg",
-    "icon": "Icon.icns",
+    "background": "assets/bg.jpg",
+    "icon": "assets/Icon.icns",
     "icon-size": 80,
     "contents": [
       { "x": 438, "y": 344, "type": "link", "path": "/Applications" },

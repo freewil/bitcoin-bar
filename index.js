@@ -14,7 +14,7 @@ var prevTitle = ''
 var tray = null
 
 function setState (isActive, open, price) {
-  tray.setImage(__dirname + (isActive ? '/IconTemplate.png' : '/IconTemplate-inactive.png'))
+  tray.setImage(__dirname + (isActive ? '/assets/IconTemplate.png' : '/assets/IconTemplate-inactive.png'))
   tray.setContextMenu(getMenu(isActive, open, price))
 }
 
@@ -101,7 +101,7 @@ app.on('ready', function () {
   // hide dock icon (OSX only)
   app.dock && app.dock.hide && app.dock.hide()
 
-  tray = new Tray(__dirname + '/IconTemplate-inactive.png')
+  tray = new Tray(__dirname + '/assets/IconTemplate-inactive.png')
   tray.setContextMenu(getMenu(false))
   updatePrice()
 })
